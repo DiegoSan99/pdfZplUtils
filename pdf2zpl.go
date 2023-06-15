@@ -5,12 +5,33 @@ import (
 	"github.com/gen2brain/go-fitz"
 	"github.com/nfnt/resize"
 	"image/png"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"simonwaldherr.de/go/zplgfa"
 )
+
+func CopyFile(src, dst string) error {
+	srcFile, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+
+	dstFile, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	if _, err = io.Copy(dstFile, srcFile); err != nil {
+		return err
+	}
+
+	return dstFile.Sync()
+}
 
 func Base64ToZpl(base64PDF string) string {
 	data, err := base64.StdEncoding.DecodeString(base64PDF)
@@ -55,7 +76,7 @@ func Base64ToZpl(base64PDF string) string {
 	imgFile.Close()
 
 	filename := filepath.Base(imgFile.Name())
-	err = os.Rename(imgFile.Name(), filename)
+	err = CopyFile(imgFile.Name(), filename)
 	if err != nil {
 		log.Fatalf("Error saving PNG image: %v", err)
 	}
