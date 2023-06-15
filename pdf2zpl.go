@@ -60,7 +60,7 @@ func Base64ToZpl(base64PDF string) string {
 		log.Fatalf("Error extracting image from PDF: %v", err)
 	}
 
-	newWidth := uint(500)
+	newWidth := uint(550)
 	resizedImg := resize.Resize(newWidth, 0, img, resize.Lanczos3)
 
 	imgFile, err := ioutil.TempFile("", "temp_img_*.png")
