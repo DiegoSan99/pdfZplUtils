@@ -59,7 +59,7 @@ func Base64ToZpl(base64PDF string) string {
 	if err != nil {
 		log.Fatalf("Error saving PNG image: %v", err)
 	}
-
+	defer os.Remove(filename) // Add this line
 	f, err := os.Open(filename)
 	if err != nil {
 		log.Fatalf("Error opening PNG image file: %v", err)
