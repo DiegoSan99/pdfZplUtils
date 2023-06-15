@@ -33,7 +33,7 @@ func CopyFile(src, dst string) error {
 	return dstFile.Sync()
 }
 
-func Base64ToZpl(base64PDF string) string {
+func Base64ToZpl(base64PDF string, pngSize int32) string {
 	data, err := base64.StdEncoding.DecodeString(base64PDF)
 	if err != nil {
 		log.Fatalf("Error decoding base64 PDF: %v", err)
@@ -60,7 +60,7 @@ func Base64ToZpl(base64PDF string) string {
 		log.Fatalf("Error extracting image from PDF: %v", err)
 	}
 
-	newWidth := uint(550)
+	newWidth := uint(pngSize)
 	resizedImg := resize.Resize(newWidth, 0, img, resize.Lanczos3)
 
 	imgFile, err := ioutil.TempFile("", "temp_img_*.png")
